@@ -24,10 +24,12 @@ public class GameManage : MonoBehaviour
     public void KillPlayer()
     {
         Destroy(playerInc);
+        Debug.Log("KillPlayer");
     }
 
     public void SpawnPlayer()
     {
+        gameHasEnded = false;
         playerInc = Instantiate(player);
         Invoke("StartPlayer", restartDelay);
     }
@@ -49,15 +51,20 @@ public class GameManage : MonoBehaviour
         {
             gameHasEnded = true;
         }
+        Debug.Log("EndGame");
     }
 
     public void Dead()
     {
+        Debug.Log("Dead");
+        EndGame();
+        KillPlayer();
         Invoke("PauseGame", restartDelay);
     }
 
     public void PauseGame()
     {
         pauseMenu.Pause();
+        Debug.Log("Pause");
     }
 }

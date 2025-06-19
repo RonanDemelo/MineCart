@@ -22,7 +22,7 @@ public class LevelBuilder : MonoBehaviour
     //Room Types
     [SerializeField] Tile startRoomType;                      // Start room tile type
     [SerializeField] Tile endRoomType;                        // End room tile type
-    [SerializeField] Tile lootRoomType;                        //A Room that contains loot
+    [SerializeField] Tile[] lootRoomTypes;                       //A Room that contains loot
     [SerializeField] Tile[] corridorTypes;                     // Array of corridor tile types
     [SerializeField] Tile[] roomTypes;                         // Array of room tile types
 
@@ -112,7 +112,7 @@ public class LevelBuilder : MonoBehaviour
 
             if (Random.Range(0f,1f) < lootRoomChance)
             {
-                Tile _lootTile = Instantiate(lootRoomType,
+                Tile _lootTile = Instantiate(lootRoomTypes[Random.Range(0, lootRoomTypes.Length)],
                    _lastTileMade2.transform.position,
                    _lastTileMade2.transform.rotation,
                    transform);

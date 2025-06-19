@@ -89,7 +89,8 @@ public class PlayerController : MonoBehaviour
         FlashOn();
         PickUp();
         battery.value = currentBattery / maxBattery;
-        
+        StartCooldown();
+
     }
 
     private void Move()
@@ -158,15 +159,13 @@ public class PlayerController : MonoBehaviour
             }
 
 
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _leverHit, pickUpDis + 3, pickUpLayerMask))
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _leverHit, pickUpDis + 3, pickUpLayerMask) && cooldownComplete == true)
             {
                 if (_leverHit.transform.TryGetComponent(out SwitchTrack switchTrack))
                 {
-                    Debug.Log("Hit");
                     switchTrack.ChangeTrack();
                     cooldownLeft = 0f;
                     cooldownComplete = false;
-                    StartCooldown();
                 }
             }
         }
@@ -175,11 +174,11 @@ public class PlayerController : MonoBehaviour
 
     public void StartCooldown()
     {
-        if(cooldownLeft < cooldownTime)
+        if(cooldownLeft <= cooldownTime)
         {
-            cooldownLeft += 0.1f * Time.deltaTime;
+            cooldownLeft += 3f * Time.deltaTime;
         }
-        if(cooldownLeft ==  cooldownTime)
+        if (cooldownLeft >= cooldownTime)
         {
             cooldownComplete = true;
         }
