@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelBuilder : MonoBehaviour
 {
-    //[SerializeField] GameManage gameManage;
+    [SerializeField] GameManage gameManage;
 
     //Balance Vars
     [SerializeField] int mainPathLength = 5;                 // Length of the main path
@@ -29,7 +29,7 @@ public class LevelBuilder : MonoBehaviour
     //Build data
     [SerializeField] List<Vector2> tileCoords = new List<Vector2>();   // List of occupied tile coordinates
     List<Tile> placedTiles = new List<Tile>();                  // List of placed tiles
-    List<Transform> availableExits = new List<Transform>();     // List of available exit points
+    [SerializeField]List<Transform> availableExits = new List<Transform>();     // List of available exit points
 
     private void Start()
     {
@@ -75,8 +75,6 @@ public class LevelBuilder : MonoBehaviour
         Tile startTile = Instantiate(startRoomType,Vector3.zero,
             Quaternion.identity, transform);
 
-        yield return new WaitForSeconds(1);
-
         AddTile(startTile);
 
         // Make first chain and wait
@@ -101,7 +99,7 @@ public class LevelBuilder : MonoBehaviour
 
         // Make side Paths
         int sidePaths = sidePathAmount;
-        while (sidePaths > 0)
+        while (sidePaths > 0 && availableExits.Count > 1)
         {
             // Use the same function but start at a random tile
             StartCoroutine(CrouteMakeChain(sidePathLength,
@@ -145,6 +143,8 @@ public class LevelBuilder : MonoBehaviour
         }
 
         makingLevel = false;
+
+        gameManage.StartLevel();
     }
 
     IEnumerator CrouteMakeChain(int _roomCount, Tile _currentTile)

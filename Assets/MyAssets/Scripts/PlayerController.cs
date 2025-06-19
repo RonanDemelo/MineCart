@@ -1,22 +1,25 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
+using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
     private CharacterController characterController;
-    private PlayerInput playerInput;
+    public PlayerInput playerInput;
     [SerializeField]
     private CinemachineCamera cam;
 
     [Header("Movement")]
     [SerializeField, Range(0f, 100f)]
-    float maxSpeed = 5f;
+    public float maxSpeed = 0f;
 
 
     [Header("Camera")]
     [SerializeField]
     private float currentPitch = 0f;
+    private float currentYaw = 0f;
     private float mouseSens = 0.1f;
     private float pitchRange = 80f;
     public float CurrentPitch
@@ -28,8 +31,42 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public float CurrentYaw
+    {
+        get => currentYaw;
+        set
+        {
+            currentYaw = Mathf.Clamp(value, -pitchRange, pitchRange);
+        }
+    }
+
+    [Header("Light")]
+    [SerializeField]
+    GameObject flashLight;
+    [SerializeField]
+    float currentBattery, maxBattery;
+    [SerializeField]
+    float lightCost;
+    [SerializeField]
+    Slider battery;
+    [SerializeField]
+    float rayLength;
+    [SerializeField]
+    LayerMask layerMask;
+
+    [Header("PickUp")]
+    [SerializeField]
+    float pickUpDis = 10f;
+    [SerializeField]
+    LayerMask pickUpLayerMask;
+    [SerializeField]
+    float cooldownTime = 1f;
+    [SerializeField]
+    float cooldownLeft = 1f;
+    bool cooldownComplete = true;
+
     //input action
-    private InputAction moveAction;
+    private InputAction pickUpAction;
     private InputAction lookAction;
     private InputAction lightAction;
 
@@ -40,21 +77,25 @@ public class PlayerController : MonoBehaviour
 
         playerInput = GetComponent<PlayerInput>();
         characterController = GetComponent<CharacterController>();
-        moveAction = playerInput.actions["Movement"];
         lookAction = playerInput.actions["Look"];
+        lightAction = playerInput.actions["Light"];
+        pickUpAction = playerInput.actions["PickUp"];
     }
 
     private void Update()
     {
         Look();
         Move();
+        FlashOn();
+        PickUp();
+        battery.value = currentBattery / maxBattery;
+        
     }
 
     private void Move()
     {
-        Vector3 _moveDir = transform.forward * moveAction.ReadValue<Vector2>().y + transform.right * moveAction.ReadValue<Vector2>().x;
+        Vector3 _moveDir = transform.forward * 1f;
         _moveDir.y = 0;
-        _moveDir.Normalize();
 
         characterController.Move(_moveDir * maxSpeed * Time.deltaTime);
     }
@@ -65,9 +106,83 @@ public class PlayerController : MonoBehaviour
 
         //looking up and down
         CurrentPitch -= _lookDir.y;
-        cam.transform.localRotation = Quaternion.Euler(CurrentPitch, 0f, 0f);
-
-        //looking left and right
-        transform.Rotate(Vector3.up * _lookDir.x);
+        CurrentYaw += _lookDir.x;
+        cam.transform.localRotation = Quaternion.Euler(CurrentPitch, CurrentYaw, 0f);
     }
+
+    private void FlashOn()
+    {
+        if(lightAction.ReadValue<float>() < 0.5f)
+        {
+            flashLight.SetActive(false);
+        }
+        else if(lightAction.ReadValue<float>() > 0.5f && currentBattery > 0)
+        {
+            flashLight.SetActive(true);
+
+            currentBattery -= lightCost * Time.deltaTime;
+            if(currentBattery < 0f)
+            {
+                flashLight.SetActive(false);
+                currentBattery = 0f;
+            }
+
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _rayHit, rayLength, layerMask))
+            {
+                if (_rayHit.transform.TryGetComponent(out EnemyAI enemy))
+                {
+                    Destroy(enemy.gameObject);
+                }
+            }
+
+        }
+    }
+
+    private void PickUp()
+    {
+        if(pickUpAction.ReadValue<float>() > 0.5f)
+        {
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _rayHit, pickUpDis, pickUpLayerMask))
+            {
+                //Debug.DrawRay(cam.transform.position, cam.transform.forward * pickUpDis, Color.yellow, 10f);
+                if (_rayHit.transform.TryGetComponent(out Gem gem))
+                {
+                    currentBattery += gem.chargeAmount;
+
+                    if (currentBattery > 100f)
+                    {
+                        currentBattery = 100f;
+                    }
+                    Destroy(gem.gameObject);
+                }
+            }
+
+
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _leverHit, pickUpDis + 3, pickUpLayerMask))
+            {
+                if (_leverHit.transform.TryGetComponent(out SwitchTrack switchTrack))
+                {
+                    Debug.Log("Hit");
+                    switchTrack.ChangeTrack();
+                    cooldownLeft = 0f;
+                    cooldownComplete = false;
+                    StartCooldown();
+                }
+            }
+        }
+            
+    }
+
+    public void StartCooldown()
+    {
+        if(cooldownLeft < cooldownTime)
+        {
+            cooldownLeft += 0.1f * Time.deltaTime;
+        }
+        if(cooldownLeft ==  cooldownTime)
+        {
+            cooldownComplete = true;
+        }
+    }
+        
 }
