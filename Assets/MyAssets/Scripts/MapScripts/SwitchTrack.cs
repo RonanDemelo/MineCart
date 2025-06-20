@@ -8,6 +8,13 @@ public class SwitchTrack : MonoBehaviour
     [SerializeField] private GameObject track1;
     [SerializeField] private GameObject track2;
 
+    [SerializeField]AudioClip trackClip;
+    AudioSource trackSource;
+
+    private void Awake()
+    {
+        trackSource = GetComponent<AudioSource>();
+    }
     public void ChangeTrack()
     {
         if (currentTrack == 2)
@@ -24,5 +31,6 @@ public class SwitchTrack : MonoBehaviour
             currentTrack = 2;
             transform.localRotation = Quaternion.Euler(0f, 0f, 25f);
         }
+        trackSource?.Play();
     }
 }

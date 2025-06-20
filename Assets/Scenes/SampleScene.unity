@@ -15,15 +15,15 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
+  m_FogColor: {r: 0.254717, g: 0.21266466, b: 0.21266466, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.25
+  m_FogDensity: 0.12
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.07329258, g: 0.06724815, b: 0.10111068, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0.85
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -375,6 +375,7 @@ MonoBehaviour:
   GameIsPaused: 0
   pauseMenuUI: {fileID: 2079570621}
   deadMenuUI: {fileID: 1798290187}
+  winMenuUI: {fileID: 709733510}
   gameManager: {fileID: 1330267871}
   SceneNo: 0
 --- !u!1 &254198074
@@ -1855,7 +1856,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 200
+  far clip plane: 100
   field of view: 80
   orthographic: 0
   orthographic size: 5
@@ -2094,13 +2095,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameHasEnded: 0
   restartDelay: 1
-  completeLevelUI: {fileID: 709733510}
   pauseMenu: {fileID: 128613666}
   player: {fileID: 7077212366070316316, guid: dfb26efb1532e8f4fa243ee91f38322c, type: 3}
   mapCamera: {fileID: 2090625708}
   playerCamera: {fileID: 1102067068}
   playerInc: {fileID: 0}
-  playerSpeed: 4.32
+  playerCon: {fileID: 0}
+  scoreText: {fileID: 65110977}
+  playerSpeed: 4
 --- !u!4 &1330267872
 Transform:
   m_ObjectHideFlags: 0
@@ -2318,11 +2320,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManage: {fileID: 1330267871}
-  mainPathLength: 30
-  sidePathLength: 1
-  sidePathAmount: 15
-  corridorChance: 0.435
-  stackingCorridorChance: 0.4
+  mainPathLength: 4
+  sidePathLength: 0
+  sidePathAmount: 0
+  corridorChance: 0.21
+  stackingCorridorChance: 0.255
   lootRoomChance: 1
   startRoomType: {fileID: 5004955892881893389, guid: c071e896e6a18dc479bbd32d925a1501, type: 3}
   endRoomType: {fileID: 5004955892881893389, guid: 2d1b8365b764c204db9370e454526005, type: 3}
@@ -3814,6 +3816,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 173078809131120730, guid: dfb26efb1532e8f4fa243ee91f38322c, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3395291347067524199, guid: dfb26efb1532e8f4fa243ee91f38322c, type: 3}
+      propertyPath: m_BounceIntensity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5705981750946667128, guid: dfb26efb1532e8f4fa243ee91f38322c, type: 3}

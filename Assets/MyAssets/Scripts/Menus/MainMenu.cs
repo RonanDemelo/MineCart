@@ -6,15 +6,15 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     public GameObject loadingScreen;
-    public Slider slider;
+    public Image image;
 
-    public void PlayGame()
+    public void PlayEasy()
     {
         loadingScreen.SetActive(true);
         StartCoroutine(LoadAsync(1));
     }
 
-    public void PlayTutorial()
+    public void PlayHard()
     {
         loadingScreen.SetActive(true);
         StartCoroutine(LoadAsync(2));
@@ -32,7 +32,7 @@ public class MainMenu : MonoBehaviour
         {
             float progress = Mathf.Clamp01(operation.progress / .9f);
 
-            slider.value = progress;
+            image.fillAmount = progress;
 
             yield return null;
         }

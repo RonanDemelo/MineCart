@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,11 @@ public class PlayerController : MonoBehaviour
     public PlayerInput playerInput;
     [SerializeField]
     private CinemachineCamera cam;
+
+    [SerializeField]
+    AudioClip clip;
+    [SerializeField]
+    AudioSource gemPickUp;
 
     [Header("Movement")]
     [SerializeField, Range(0f, 100f)]
@@ -65,6 +71,12 @@ public class PlayerController : MonoBehaviour
     float cooldownLeft = 1f;
     bool cooldownComplete = true;
 
+    [Header("Score")]
+    [SerializeField]
+    public float score = 0f;
+    [SerializeField]
+    TextMeshProUGUI scoreText;
+
     //input action
     private InputAction pickUpAction;
     private InputAction lookAction;
@@ -74,6 +86,8 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        gemPickUp = GetComponent<AudioSource>();
 
         playerInput = GetComponent<PlayerInput>();
         characterController = GetComponent<CharacterController>();
@@ -90,6 +104,7 @@ public class PlayerController : MonoBehaviour
         PickUp();
         battery.value = currentBattery / maxBattery;
         StartCooldown();
+        scoreText.text = score.ToString("F0");
 
     }
 
@@ -130,6 +145,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _rayHit, rayLength, layerMask))
             {
+                Debug.Log(_rayHit.collider);
                 if (_rayHit.transform.TryGetComponent(out EnemyAI enemy))
                 {
                     Destroy(enemy.gameObject);
@@ -145,15 +161,16 @@ public class PlayerController : MonoBehaviour
         {
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _rayHit, pickUpDis, pickUpLayerMask))
             {
-                //Debug.DrawRay(cam.transform.position, cam.transform.forward * pickUpDis, Color.yellow, 10f);
                 if (_rayHit.transform.TryGetComponent(out Gem gem))
                 {
                     currentBattery += gem.chargeAmount;
+                    score += gem.chargeAmount;
 
                     if (currentBattery > 100f)
                     {
                         currentBattery = 100f;
                     }
+                    gemPickUp?.Play();
                     Destroy(gem.gameObject);
                 }
             }
@@ -183,5 +200,5 @@ public class PlayerController : MonoBehaviour
             cooldownComplete = true;
         }
     }
-        
+
 }

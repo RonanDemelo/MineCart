@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pauseMenuUI;
     public GameObject deadMenuUI;
+    public GameObject winMenuUI;
 
     public GameManage gameManager;
 
@@ -33,6 +34,10 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        if (gameManager.gameHasEnded == true)
+        {
+            return;
+        }
         pauseMenuUI.SetActive(false);
         deadMenuUI.SetActive(false);
         Time.timeScale = 1f;
@@ -58,6 +63,20 @@ public class PauseMenu : MonoBehaviour
         gameManager.playerInc.SetActive(false);
     }
 
+    public void Win()
+    {
+        winMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        GameIsPaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        gameManager.playerInc.SetActive(false);
+        if (gameManager.gameHasEnded == true)
+        {
+            return;
+        }
+    }
+
     public void Restart()
     {
         Resume();
@@ -73,7 +92,16 @@ public class PauseMenu : MonoBehaviour
 
     public void Quit()
     {
-        Debug.Log("Quit");
-        Application.Quit();
+        StartCoroutine(LoadAsync(0));
+    }
+
+    IEnumerator LoadAsync(int sceneIndex)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
+        while (operation.isDone == false)
+        {
+            float progress = Mathf.Clamp01(operation.progress / .9f);
+            yield return null;
+        }
     }
 }

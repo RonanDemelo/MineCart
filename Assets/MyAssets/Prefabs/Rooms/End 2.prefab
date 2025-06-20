@@ -76,6 +76,8 @@ GameObject:
   - component: {fileID: 6000461061375100755}
   - component: {fileID: 866277068079647108}
   - component: {fileID: 5004955892881893389}
+  - component: {fileID: 8405823110979820368}
+  - component: {fileID: 418485719468001417}
   m_Layer: 0
   m_Name: End 2
   m_TagString: Untagged
@@ -194,6 +196,41 @@ MonoBehaviour:
   isRoomTile: 0
   tileSize: {x: 10, y: 1, z: 10}
   tile: {fileID: 7002551302752852447}
+--- !u!65 &8405823110979820368
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8326028976175444761}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.09, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.42, z: -2.28}
+--- !u!114 &418485719468001417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8326028976175444761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e1c396ad91d8a64891a513c62d6e5f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManGO: {fileID: 0}
+  gameManage: {fileID: 0}
 --- !u!1001 &846095505496116449
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -364,7 +401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5079834494639593427, guid: c1724becec87f664ca97ddd4604eed15, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.743
+      value: 1.195
       objectReference: {fileID: 0}
     - target: {fileID: 5079834494639593427, guid: c1724becec87f664ca97ddd4604eed15, type: 3}
       propertyPath: m_LocalPosition.y

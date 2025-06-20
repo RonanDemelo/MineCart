@@ -1,17 +1,20 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManage : MonoBehaviour
 {
-    [SerializeField] public bool gameHasEnded = false;
-    [SerializeField] private float restartDelay = 2f;
-
-    [SerializeField] private GameObject completeLevelUI;
+    public bool gameHasEnded = false;
+    [SerializeField] private float restartDelay = 3f;
     [SerializeField] private PauseMenu pauseMenu;
 
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject mapCamera;
     [SerializeField] private GameObject playerCamera;
-    [SerializeField] public GameObject playerInc;
+    public GameObject playerInc;
+    public PlayerController playerCon;
+    private float lastScore;
+    [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] private float playerSpeed = 3f;
 
     public void StartLevel() 
@@ -23,15 +26,17 @@ public class GameManage : MonoBehaviour
 
     public void KillPlayer()
     {
+        lastScore = playerCon.score - 5f;
         Destroy(playerInc);
-        Debug.Log("KillPlayer");
     }
 
     public void SpawnPlayer()
     {
         gameHasEnded = false;
         playerInc = Instantiate(player);
-        Invoke("StartPlayer", restartDelay);
+        playerCon = playerInc.GetComponent<PlayerController>();
+        playerCon.score = lastScore;
+        Invoke("StartPlayer", restartDelay + 1);
     }
 
     public void StartPlayer()
@@ -41,8 +46,8 @@ public class GameManage : MonoBehaviour
 
     public void FinishedLevel()
     {
-        completeLevelUI.SetActive(true);
-        EndGame();
+        scoreText.text = "Score: " + playerCon.score.ToString("F0");
+        Invoke("WinGame", 0.25f);
     }
 
     public void EndGame()
@@ -51,12 +56,10 @@ public class GameManage : MonoBehaviour
         {
             gameHasEnded = true;
         }
-        Debug.Log("EndGame");
     }
 
     public void Dead()
     {
-        Debug.Log("Dead");
         EndGame();
         KillPlayer();
         Invoke("PauseGame", restartDelay);
@@ -65,6 +68,10 @@ public class GameManage : MonoBehaviour
     public void PauseGame()
     {
         pauseMenu.Pause();
-        Debug.Log("Pause");
+    }
+
+    public void WinGame()
+    {
+        pauseMenu.Win();
     }
 }
