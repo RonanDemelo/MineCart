@@ -143,14 +143,14 @@ public class PlayerController : MonoBehaviour
                 currentBattery = 0f;
             }
 
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _rayHit, rayLength, layerMask))
-            {
-                Debug.Log(_rayHit.collider);
-                if (_rayHit.transform.TryGetComponent(out EnemyAI enemy))
-                {
-                    Destroy(enemy.gameObject);
-                }
-            }
+            //if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit _rayHit, rayLength, layerMask))
+            //{
+            //    Debug.Log(_rayHit.collider);
+            //    if (_rayHit.transform.TryGetComponent(out EnemyAI enemy))
+            //    {
+                    
+            //    }
+            //}
 
         }
     }

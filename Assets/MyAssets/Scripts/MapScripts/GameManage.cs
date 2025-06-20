@@ -21,7 +21,7 @@ public class GameManage : MonoBehaviour
     {
         mapCamera.SetActive(false);
         playerCamera.SetActive(true);
-        SpawnPlayer();
+        Invoke("SpawnPlayer", 0.5f);
     }
 
     public void KillPlayer()
@@ -36,7 +36,7 @@ public class GameManage : MonoBehaviour
         playerInc = Instantiate(player);
         playerCon = playerInc.GetComponent<PlayerController>();
         playerCon.score = lastScore;
-        Invoke("StartPlayer", restartDelay + 1);
+        Invoke("StartPlayer", restartDelay);
     }
 
     public void StartPlayer()

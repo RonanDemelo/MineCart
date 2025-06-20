@@ -13,7 +13,13 @@ public class LightAttack : MonoBehaviour
             Debug.DrawRay(transform.position, transform.forward * rayLength, Color.yellow, 5f);
             if(_rayHit.transform.TryGetComponent(out EnemyAI enemy))
             {
-                Destroy(enemy.gameObject);
+                enemy.enemyHealth -= 3f * Time.deltaTime;
+                Debug.Log(enemy.enemyHealth);
+                if (enemy.enemyHealth <= 0f)
+                {
+                    Debug.Log("Die");
+                    Destroy(enemy.gameObject);
+                }
             }
         }
     }

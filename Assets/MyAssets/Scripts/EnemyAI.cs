@@ -5,6 +5,10 @@ public class EnemyAI : MonoBehaviour
     [SerializeField]GameObject gameManGO;
     [SerializeField] GameManage gameManage;
     [SerializeField] Animator animator;
+    [SerializeField] public float enemyHealth = 4f;
+
+    [SerializeField] AudioClip hurt;
+    [SerializeField] AudioSource source;
 
     private void Awake()
     {
